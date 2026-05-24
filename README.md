@@ -48,7 +48,7 @@ graph TB
         DB[(PostgreSQL)]
     end
 
-    subgraph Smart Contracts [EVM Blockchain]
+    subgraph SmartContracts [EVM Blockchain]
         Registry["AssetRegistry (UUPS)"]
         Token["AssetToken (ERC-20)"]
         Yield["YieldDistributor (UUPS)"]
@@ -63,9 +63,9 @@ graph TB
 
     Dashboard <--> API
     GovUI <--> API
-    AdminPanel --> Smart Contracts
+    AdminPanel --> SmartContracts
 
-    EventSync -->|Reads Events| Smart Contracts
+    EventSync -->|Reads Events| SmartContracts
     EventSync -->|Writes Data| DB
     API -->|Queries| DB
 ```
