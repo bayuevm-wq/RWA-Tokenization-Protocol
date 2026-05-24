@@ -1,0 +1,30 @@
+{
+  "name": "rwa-tokenization-platform",
+  "version": "2.0.0",
+  "description": "Professional-grade Real-World Asset (RWA) Enterprise Platform",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev -w apps/frontend",
+    "build:frontend": "npm run build -w apps/frontend",
+    "compile:contracts": "npm run compile -w packages/contracts",
+    "test:contracts": "npm run test -w packages/contracts",
+    "clean": "npm run clean -ws"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/hardhat-upgrades": "^3.6.0",
+    "cross-env": "^7.0.3",
+    "hardhat": "^2.22.0",
+    "hardhat-contract-sizer": "^2.10.0",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0",
+    "@openzeppelin/contracts-upgradeable": "^5.1.0",
+    "dotenv": "^16.4.0"
+  }
+}

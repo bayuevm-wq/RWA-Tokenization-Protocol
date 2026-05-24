@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # 1. Hardhat Local Node (Blockchain Simulation)
+  hardhat-node:
+    image: node:20-alpine
+    working_dir: /app/packages/contracts
+    volumes:
+      - .:/app
+    command: npm run node
+    ports:
+      - "8545:8545"
+    networks:
+      - rwa-net
+
+  # 2. PostgreSQL (Database for Indexer & Analytics)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: rwa_indexer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rwa-net
+
+  # 3. Indexer Backend (Node.js API)
+  indexer:
+    image: node:20-alpine
+    working_dir: /app/apps/indexer
+    volumes:
+      - .:/app
+    command: npm run dev
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/rwa_indexer
+      - RPC_URL=http://hardhat-node:8545
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - hardhat-node
+    networks:
+      - rwa-net
+
+  # 4. Next.js Frontend Dashboard
+  frontend:
+    image: node:20-alpine
+    working_dir: /app/apps/frontend
+    volumes:
+      - .:/app
+    command: npm run dev
+    environment:
+      - NEXT_PUBLIC_RPC_URL=http://localhost:8545
+      - NEXT_PUBLIC_INDEXER_URL=http://localhost:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - indexer
+    networks:
+      - rwa-net
+
+volumes:
+  postgres_data:
+
+networks:
+  rwa-net:
+    driver: bridge
